@@ -130,18 +130,35 @@ class Character(models.Model):
     abilities = models.ManyToManyField('Ability',blank=True)
     summary = models.TextField(blank=True,default='')
     background = models.TextField(blank=True,default='')
-    # strength = models.IntegerField(default=0)
-    # constitution = models.IntegerField(default=0)
-    # dexterity = models.IntegerField(default=0)
-    # intelligence = models.IntegerField(default=0)
-    # wisdom = models.IntegerField(default=0)
-    # charisma = models.IntegerField(default=0)
+    strength = models.IntegerField(default=0)
+    constitution = models.IntegerField(default=0)
+    dexterity = models.IntegerField(default=0)
+    intelligence = models.IntegerField(default=0)
+    wisdom = models.IntegerField(default=0)
+    charisma = models.IntegerField(default=0)
+    primaryWeaponName = models.CharField(max_length=64,default='Primary Weapon',verbose_name = 'Weapon Name')
+    secondaryWeaponName = models.CharField(max_length=64,default='Secondary Weapon',verbose_name = 'Weapon Name')
+    extraWeaponName = models.CharField(max_length=64,default='Extra Weapon',verbose_name = 'Weapon Name')
+    primaryWeapon = models.OneToOneField('Weapon',blank=True,null=True,default='',related_name='primaryweapon',verbose_name = 'Weapon')
+    secondaryWeapon = models.OneToOneField('Weapon',blank=True,null=True,default='',related_name='secondaryweapon',verbose_name = 'Weapon')
+    extraWeapon = models.OneToOneField('Weapon',blank=True,null=True,default='',related_name='extraweapon',verbose_name = 'Weapon')
+    primaryItems = models.ManyToManyField('Item',blank=True,related_name='primaryitem',verbose_name = 'Item Bonuses')
+    secondaryItems = models.ManyToManyField('Item',blank=True,related_name='secondaryitem',verbose_name = 'Item Bonuses')
+    extraItems = models.ManyToManyField('Item',blank=True,related_name='extraitem',verbose_name = 'Item Bonuses')
+    primaryProf = models.BooleanField(default=0,verbose_name = 'Proficiency')
+    secondaryProf = models.BooleanField(default=0,verbose_name = 'Proficiency')
+    extraProf = models.BooleanField(default=0,verbose_name = 'Proficiency')
+    primaryFeatBonus = models.ManyToManyField('FeatBonus',blank=True,related_name='primaryfeats',verbose_name = 'Feat Bonuses')
+    secondaryFeatBonus = models.ManyToManyField('FeatBonus',blank=True,related_name='secondaryfeats',verbose_name = 'Feat Bonuses')
+    extraFeatBonus = models.ManyToManyField('FeatBonus',blank=True,related_name='extrafeats',verbose_name = 'Feat Bonuses')
+    primaryClassBonus = models.ManyToManyField('ClassBonus',blank=True,related_name='primaryClass',verbose_name = 'Class Bonuses')
+    secondaryClassBonus = models.ManyToManyField('ClassBonus',blank=True,related_name='secondaryClass',verbose_name = 'Class Bonuses')
+    extraClassBonus = models.ManyToManyField('ClassBonus',blank=True,related_name='extraClass',verbose_name = 'Class Bonuses')
 
     def __unicode__(self):
         return self.name
 
 class Ability(models.Model):
-
     name = models.CharField(max_length=64,blank=True)
     level = models.CharField(max_length=64,blank=True)
     flavor = models.TextField(blank=True)
@@ -179,6 +196,53 @@ class AbilityKeyword(models.Model):
     def __unicode__(self):
         return self.name
 
+#Weapons
+
+class Weapon(models.Model):
+    name = models.CharField(max_length=64)
+    image = models.ImageField(upload_to='uploaded/weapons/',blank=True,default='')
+    proficiency = models.IntegerField(max_length=64,null=True,blank=True)
+    enhancement = models.IntegerField(max_length=64,null=True,blank=True)
+    damage = models.CharField(max_length=64)
+    range = models.CharField(max_length=64,blank=True)
+    weight = models.CharField(max_length=64,blank=True)
+    group = models.CharField(max_length=64)
+    properties = models.CharField(max_length=64,blank=True)
+    note = models.TextField(blank=True,default='')
+
+    def __unicode__(self):
+        return self.name
+
+#Items
+
+class Item(models.Model):
+    name = models.CharField(max_length=64)
+    image = models.ImageField(upload_to='uploaded/weapons/',blank=True,default='')
+    bonus = models.IntegerField(max_length=64,null=True,blank=True)
+    note = models.TextField(blank=True,default='')
+
+    def __unicode__(self):
+        return self.name
+        
+class FeatBonus(models.Model):
+    class Meta:
+        verbose_name_plural = "feat bonuses"
+    name = models.CharField(max_length=64)
+    bonus = models.IntegerField(max_length=64,null=True,blank=True)
+    note = models.TextField(blank=True,default='')
+
+    def __unicode__(self):
+        return self.name
+        
+class ClassBonus(models.Model):
+    class Meta:
+        verbose_name_plural = "class bonuses"
+    name = models.CharField(max_length=64)
+    bonus = models.IntegerField(max_length=64,null=True,blank=True)
+    note = models.TextField(blank=True,default='')
+
+    def __unicode__(self):
+        return self.name
 
 #MonsterManager
 

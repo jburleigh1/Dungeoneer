@@ -1,0 +1,238 @@
+{% load mathfilters %}
+{% load notEmpty %}
+<section class="cp-attack-workspace">
+    <div class="cp-attack-workspace__ability-scores">
+       <div class="cp-attack-workspace__tab">
+           Ability Scores
+       </div>
+        <table>
+        <tr class="cp-attack-workspace__ability-header">
+            <td>Score</td>
+            <td>Ability</td>
+            <td>Mod</td>
+            <td>Mod+½lvl</td>
+        </tr>
+            <!-- Stat Row -->
+            <tr class="str">
+                <td>{{strength}}</td>
+                <td>Strength</td>
+                <td class="mod">{{strength|add:'-10'|intdiv:2}}</td>
+                {% with halfLevel=level|intdiv:2 %}
+                    <td>{{strength|add:'-10'|intdiv:2|add:halfLevel}}</td>
+                {% endwith %}
+            </tr>
+            <!-- End Stat Row -->
+            <!-- Stat Row -->
+            <tr class="con">
+                <td>{{constitution}}</td>
+                <td>Constitution</td>
+                <td class="mod">{{constitution|add:'-10'|intdiv:2}}</td>
+                {% with halfLevel=level|intdiv:2 %}
+                    <td>{{constitution|add:'-10'|intdiv:2|add:halfLevel}}</td>
+                {% endwith %}
+            </tr>
+            <!-- End Stat Row -->
+            <!-- Stat Row -->
+            <tr class="dex">
+                <td>{{dexterity}}</td>
+                <td>Dexterity</td>
+                <td class="mod">{{dexterity|add:'-10'|intdiv:2}}</td>
+                {% with halfLevel=level|intdiv:2 %}
+                    <td>{{dexterity|add:'-10'|intdiv:2|add:halfLevel}}</td>
+                {% endwith %}
+            </tr>
+            <!-- End Stat Row -->
+            <!-- Stat Row -->
+            <tr class="int">
+                <td>{{intelligence}}</td>
+                <td>Intelligence</td>
+                <td class="mod">{{intelligence|add:'-10'|intdiv:2}}</td>
+                {% with halfLevel=level|intdiv:2 %}
+                    <td>{{intelligence|add:'-10'|intdiv:2|add:halfLevel}}</td>
+                {% endwith %}
+            </tr>
+            <!-- End Stat Row -->
+            <!-- Stat Row -->
+            <tr class="wis">
+                <td>{{wisdom}}</td>
+                <td>Wisdom</td>
+                <td class="mod">{{wisdom|add:'-10'|intdiv:2}}</td>
+                {% with halfLevel=level|intdiv:2 %}
+                    <td>{{wisdom|add:'-10'|intdiv:2|add:halfLevel}}</td>
+                {% endwith %}
+            </tr>
+            <!-- End Stat Row -->
+            <!-- Stat Row -->
+            <tr class="cha">
+                <td>{{charisma}}</td>
+                <td>Charisma</td>
+                <td class="mod">{{charisma|add:'-10'|intdiv:2}}</td>
+                {% with halfLevel=level|intdiv:2 %}
+                    <td>{{charisma|add:'-10'|intdiv:2|add:halfLevel}}</td>
+                {% endwith %}
+            </tr>
+            <!-- End Stat Row -->
+    </table>
+    </div>
+    {% if primaryWeapon %}
+    <div class="cp-attack-workspace__weapon cp-attack-workspace__primary-weapon">
+        <div class="cp-attack-workspace__tab">
+            <span>Primary</span>
+        </div>
+        <div class="cp-attack-workspace__weapon-details">
+            <div class="cp-attack-workspace__weapon-image">
+                <img src="{{MEDIA_URL}}{{primaryWeapon.image}}">
+            </div>
+            <div class="cp-attack-workspace__weapon-title">
+                <h3>{{primaryWeapon.name}}</h3>
+                {% if primaryWeapon.damage != '0' %}
+                    <h4>{{primaryWeapon.damage}}</h4>
+                {% endif %}
+            </div>
+            <select class='cp-attack-workspace__ability-scores-select cp-attack-workspace__ability-scores-select--primary' data-type='primary'>
+                <option value="STR">STR</option>
+                <option value="CON">CON</option>
+                <option value="DEX">DEX</option>
+                <option value="INT">INT</option>
+                <option value="WIS">WIS</option>
+                <option value="CHA">CHA</option>
+            </select>
+        </div>
+        <div class="cp-attack-workspace__weapon-table">
+            <table>
+                <tr class="cp-attack-workspace__weapon-table-header">
+                    <td>Att Bonus</td>
+                    <td>½lvl</td>
+                    <td>Abil</td>
+                    <td>Class</td>
+                    <td>Prof</td>
+                    <td>Feat</td>
+                    <td>Enh</td>
+                    <td>Misc</td>
+                </tr> 
+                <tr class="cp-attack-workspace__weapon-table-values primary-attack-workspace">
+                    <td class="total-bonus">Att Bonus</td>
+                    <td class="bonus">{{level|intdiv:2}}</td>
+                    <td class="bonus ability-bonus"></td>
+                    <td class="bonus">{{primaryClassBonusTotal.bonus__sum|default:'0'}}</td>
+                    {% if primaryProf == True %}
+                        <td class="bonus">{{primaryWeapon.proficiency|default:'0'}}</td>
+                    {% endif %}
+                    <td class="bonus">{{primaryFeatBonusTotal.bonus__sum|default:'0'}}</td>
+                    <td class="bonus">{{primaryWeapon.enhancement|default:'0'}}</td>
+                    <td class="bonus">{{primaryItemBonusTotal.bonus__sum|default:'0'}}</td>
+                </tr>
+                {% if primaryWeapon.note %}
+                    <tr class="cp-attack-workspace__weapon-table-notes"><td colspan="8"><strong>notes:</strong> {{primaryWeapon.note}}</td></tr>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+    {% endif %}
+    {% if secondaryWeapon %}
+    <div class="cp-attack-workspace__weapon cp-attack-workspace__secondary-weapon">
+        <div class="cp-attack-workspace__tab">
+            <span>Secondary</span>
+        </div>
+        <div class="cp-attack-workspace__weapon-details">
+            <div class="cp-attack-workspace__weapon-image">
+                <img src="{{MEDIA_URL}}{{secondaryWeapon.image}}">
+            </div>
+            <div class="cp-attack-workspace__weapon-title">
+                <h3>{{secondaryWeapon.name}}</h3>
+                <h4>{{secondaryWeapon.damage}}</h4>
+            </div>
+            <select class='cp-attack-workspace__ability-scores-select cp-attack-workspace__ability-scores-select--secondary' data-type='secondary'>
+                <option value="STR">STR</option>
+                <option value="CON">CON</option>
+                <option value="DEX">DEX</option>
+                <option value="INT">INT</option>
+                <option value="WIS">WIS</option>
+                <option value="CHA">CHA</option>
+            </select>
+        </div>
+        <div class="cp-attack-workspace__weapon-table">
+            <table>
+                <tr class="cp-attack-workspace__weapon-table-header">
+                    <td>Att Bonus</td>
+                    <td>½lvl</td>
+                    <td>Abil</td>
+                    <td>Class</td>
+                    <td>Prof</td>
+                    <td>Feat</td>
+                    <td>Enh</td>
+                    <td>Misc</td>
+                </tr> 
+                <tr class="cp-attack-workspace__weapon-table-values secondary-attack-workspace">
+                    <td class="total-bonus">Att Bonus</td>
+                    <td class="bonus">{{level|intdiv:2}}</td>
+                    <td class="bonus ability-bonus"></td>
+                    <td class="bonus">{{secondaryClassBonusTotal.bonus__sum|default:'0'}}</td>
+                    {% if secondaryProf == True %}
+                        <td class="bonus">{{secondaryWeapon.proficiency|default:'0'}}</td>
+                    {% endif %}
+                    <td class="bonus">{{secondaryFeatBonusTotal.bonus__sum|default:'0'}}</td>
+                    <td class="bonus">{{secondaryWeapon.enhancement|default:'0'}}</td>
+                    <td class="bonus">{{secondaryItemBonusTotal.bonus__sum|default:'0'}}</td>
+                </tr>
+                {% if secondaryWeapon.note %}
+                    <tr class="cp-attack-workspace__weapon-table-notes"><td colspan="8"><strong>notes:</strong> {{secondaryWeapon.note}}</td></tr>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+    {% endif %}
+    {% if extraWeapon %}
+    <div class="cp-attack-workspace__weapon cp-attack-workspace__extra-weapon">
+        <div class="cp-attack-workspace__tab">
+            <span>Extra</span>
+        </div>
+        <div class="cp-attack-workspace__weapon-details">
+            <div class="cp-attack-workspace__weapon-image">
+                <img src="{{MEDIA_URL}}{{extraWeapon.image}}">
+            </div>
+            <div class="cp-attack-workspace__weapon-title">
+                <h3>{{extraWeapon.name}}</h3>
+                <h4>{{extraWeapon.damage}}</h4>
+            </div>
+            <select class='cp-attack-workspace__ability-scores-select cp-attack-workspace__ability-scores-select--extra' data-type='extra'>
+                <option value="STR">STR</option>
+                <option value="CON">CON</option>
+                <option value="DEX">DEX</option>
+                <option value="INT">INT</option>
+                <option value="WIS">WIS</option>
+                <option value="CHA">CHA</option>
+            </select>
+        </div>
+        <div class="cp-attack-workspace__weapon-table">
+            <table>
+                <tr class="cp-attack-workspace__weapon-table-header">
+                    <td>Att Bonus</td>
+                    <td>½lvl</td>
+                    <td>Abil</td>
+                    <td>Class</td>
+                    <td>Prof</td>
+                    <td>Feat</td>
+                    <td>Enh</td>
+                    <td>Misc</td>
+                </tr> 
+                <tr class="cp-attack-workspace__weapon-table-values extra-attack-workspace">
+                    <td class="total-bonus">Att Bonus</td>
+                    <td class="bonus">{{level|intdiv:2}}</td>
+                    <td class="bonus ability-bonus"></td>
+                    <td class="bonus">{{extraClassBonusTotal.bonus__sum|default:'0'}}</td>
+                    {% if extraProf == True %}
+                        <td class="bonus">{{extraWeapon.proficiency|default:'0'}}</td>
+                    {% endif %}
+                    <td class="bonus">{{extraFeatBonusTotal.bonus__sum|default:'0'}}</td>
+                    <td class="bonus">{{extraWeapon.enhancement|default:'0'}}</td>
+                    <td class="bonus">{{extraItemBonusTotal.bonus__sum|default:'0'}}</td>
+                </tr>
+                {% if extraWeapon.note %}
+                    <tr class="cp-attack-workspace__weapon-table-notes"><td colspan="8"><strong>notes:</strong> {{extraWeapon.note}}</td></tr>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</section>   
